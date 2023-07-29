@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('_votes', function (Blueprint $table) {
             $table->id();
-            $table->int('user_id ');
-            $table->int('post_id');
+            $table->string('user_id');
+            $table->string('post_id');
             $table->string('vote_type');
             $table->timestamps();
         });
