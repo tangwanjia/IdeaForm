@@ -108,7 +108,7 @@ class IdeaforumController extends Controller
      */
     public function show(ideaforum $ideaforum)
     {
-        
+
     }
 
     /**
@@ -122,16 +122,65 @@ class IdeaforumController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ideaforum $ideaforum)
+    public function updatepost(Request $request, post $posts)
     {
-        //
+        //publate with data
+           $posts -> user_id= $request->input('user_id');
+           $posts -> title = $request->input('title');
+           $posts -> content = $request->input('content');
+           $posts -> save();
+
+           return response()->json($posts,200);
+    }
+
+    public function updateuser(Request $request, user $login)
+    {
+        $login -> username = $request->input('username');
+        $login -> email = $request->input('email');
+        $login -> password = $request->input('password');
+        $login -> save();
+
+        return response()->json($login,200);
+    }
+
+    public function updatecomment(Request $request, comment $comments)
+    {
+            $comments -> user_id = $request->input('user_id');
+            $comments -> post_id = $request->input('post_id');
+            $comments -> content = $request->input('content');
+            $comments -> save();
+
+            return response()->json($comments,200);
+    }
+
+    public function updatevote(Request $request, vote $votes)
+    {
+            $votes -> user_id = $request->input('user_id');
+            $votes -> post_id = $request->input('post_id');
+            $votes -> vote_type = $request->input('vote_type');
+            $votes -> save();
+
+            return response()->json($votes,200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ideaforum $ideaforum)
+    public function destroypost(post $posts)
     {
-        //
+        $posts->delete();
+        return response()->json($posts,200);
+    }
+
+    public function destroycomment(comment $comments)
+    {
+        $comments->delete();
+        return response()->json($comments,200);
+    }
+
+    public function destroyvote(vote $votes)
+    {
+        $votes->delete();
+        return response()->json($votes,200);
     }
 }
