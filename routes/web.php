@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return 'HELLO WORLD';
-});
+// Route::get('/', function () {
+//     return 'HELLO WORLD';
+// });
+
+
 
 Route::get('/ideas', [ForumController::class, 'index']);
-
-//route specific route.
-Route::get('/ideas/{id}', [ForumController::class,'show']);
+Route::get('/ideas/{id}', [ForumController::class, 'show']);

@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ideaforum;
 use Illuminate\Http\Request;
 
 class ForumController extends Controller
 {
-    private $ideas = [
-        //array for the idea
-        'user_id' => '1',
-        'user' => '',
-        'password'=> ''
-
-    ];
 
     public function index(){
-        // show all idea
-        return $this -> ideas;
+        $ideas = ideaforum::all();
+
+        return $ideas;
+
     }
 
+    public function show($id){
+        $idea = ideaforum::find($id);
+        return $idea;
+    }
 
 }
