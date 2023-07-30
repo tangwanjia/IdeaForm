@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('_posts', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->string('user_id')->unsigned();
             $table->string('title');
             $table->string('content', 500);
             $table->timestamps();

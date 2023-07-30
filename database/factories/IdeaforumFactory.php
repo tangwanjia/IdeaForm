@@ -17,7 +17,12 @@ class IdeaforumFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'username' => $this ->faker->sentence(10),
+            'email' => $this -> faker -> sentence(15),
+            'password' => $this ->faker ->sentence(20),
+            'user_id' => $this -> faker -> numberBetween(1,100),
+            'post_id'=>$this -> faker -> numberBetween(1,1000),
+            'content'=> $this ->faker -> paragraph(10)
         ];
     }
 }
