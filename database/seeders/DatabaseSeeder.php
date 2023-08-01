@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\User;
+use App\Models\vote;
 use Faker\Core\Number;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -24,9 +25,22 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        User::factory(10)->create();
+        User::factory(9)->create();
+
         // $this->call([
-        //     NoteSeeder::class
+        //     usersSeeder::class
+        // ]);
+
+        // $this->call([
+        //     PostSeeder::class
+        // ]);
+
+        // $this->call([
+        //     commentSeeder::class
+        // ]);
+
+        // $this->call([
+        //     voteSeeder::class
         // ]);
 
 

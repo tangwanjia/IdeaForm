@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\_comments;
+use App\Models\_posts;
+use App\Models\_votes;
 use App\Models\comment;
 use App\Models\ideaforum;
 use App\Models\post;
@@ -28,19 +31,19 @@ class IdeaforumController extends Controller
 
     public function post()
     {
-        $posts = post::all();
+        $posts = _posts::all();
         return response()->json($posts,200); //index mathod
     }
 
     public function commment()
     {
-        $comments = comment::all();
+        $comments = _comments::all();
         return response()->json($comments,200); //index mathod
     }
 
     public function vote()
     {
-        $votes = vote::all();
+        $votes = _votes::all();
         return response()->json($votes,200); //index mathod
     }
 
@@ -59,7 +62,7 @@ class IdeaforumController extends Controller
     public function addpost(Request $request) //create new date and save to the table
     {
 
-            $posts = new post();
+            $posts = new _posts();
          //publate with data
             $posts -> user_id= $request->input('user_id');
             $posts -> title = $request->input('title');
@@ -82,7 +85,7 @@ class IdeaforumController extends Controller
 
     public function addcomment(Request $request)
     {
-            $comments = new comment();
+            $comments = new _comments();
             //publate with data
             $comments -> user_id = $request->input('user_id');
             $comments -> post_id = $request->input('post_id');
@@ -94,7 +97,7 @@ class IdeaforumController extends Controller
 
     public function addvote(Request $request)
     {
-            $votes = new vote();
+            $votes = new _votes();
             //publate with data
             $votes -> user_id = $request->input('user_id');
             $votes -> post_id = $request->input('post_id');
@@ -122,7 +125,7 @@ class IdeaforumController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updatepost(Request $request, post $posts)
+    public function updatepost(Request $request, _posts $posts)
     {
         //publate with data
            $posts -> user_id= $request->input('user_id');
@@ -143,7 +146,7 @@ class IdeaforumController extends Controller
         return response()->json($login,200);
     }
 
-    public function updatecomment(Request $request, comment $comments)
+    public function updatecomment(Request $request, _comments $comments)
     {
             $comments -> user_id = $request->input('user_id');
             $comments -> post_id = $request->input('post_id');
@@ -153,7 +156,7 @@ class IdeaforumController extends Controller
             return response()->json($comments,200);
     }
 
-    public function updatevote(Request $request, vote $votes)
+    public function updatevote(Request $request, _votes $votes)
     {
             $votes -> user_id = $request->input('user_id');
             $votes -> post_id = $request->input('post_id');
@@ -166,19 +169,19 @@ class IdeaforumController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroypost(post $posts)
+    public function destroypost(_posts $posts)
     {
         $posts->delete();
         return response()->json($posts,200);
     }
 
-    public function destroycomment(comment $comments)
+    public function destroycomment(_comments $comments)
     {
         $comments->delete();
         return response()->json($comments,200);
     }
 
-    public function destroyvote(vote $votes)
+    public function destroyvote(_votes $votes)
     {
         $votes->delete();
         return response()->json($votes,200);

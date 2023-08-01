@@ -11,23 +11,23 @@ class ideaforum extends Model
     use HasFactory;
 }
 
-class user extends ideaforum
+class _users extends ideaforum
 {
     use HasFactory;
-    
+
 }
 
-class post extends ideaforum
-{
-    use HasFactory;
-}
-
-class comment extends ideaforum
+class _posts extends ideaforum
 {
     use HasFactory;
 }
 
-class vote extends ideaforum
+class _comments extends ideaforum
+{
+    use HasFactory;
+}
+
+class _votes extends ideaforum
 {
     use HasFactory;
 }

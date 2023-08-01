@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\post;
+use App\Models\_posts;
+use App\Models\_postspost;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +14,6 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        post::factory()->count(100)->create();
+        _posts::factory()->count(100)->create();
     }
 }
