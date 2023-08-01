@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\_comments;
 use App\Models\_posts;
 use App\Models\_votes;
-use App\Models\comment;
+use App\Models\_users;
 use App\Models\ideaforum;
-use App\Models\post;
-use App\Models\user;
-use App\Models\vote;
 use Illuminate\Http\Request;
 
 class IdeaforumController extends Controller
@@ -25,7 +22,7 @@ class IdeaforumController extends Controller
 
     public function login()
     {
-        $login = user::all();
+        $login = _users::all();
         return response()->json($login,200); //index mathod
     }
 
@@ -73,9 +70,9 @@ class IdeaforumController extends Controller
     }
     public function adduser(Request $request)
     {
-            $login = new user();
+            $login = new _users();
             //publate with data
-            $login -> username = $request->input('username');
+            $login -> username = $request->input('name');
             $login -> email = $request->input('email');
             $login -> password = $request->input('password');
             $login -> save();
@@ -136,9 +133,9 @@ class IdeaforumController extends Controller
            return response()->json($posts,200);
     }
 
-    public function updateuser(Request $request, user $login)
+    public function updateuser(Request $request, _users $login)
     {
-        $login -> username = $request->input('username');
+        $login -> username = $request->input('name');
         $login -> email = $request->input('email');
         $login -> password = $request->input('password');
         $login -> save();
@@ -169,6 +166,12 @@ class IdeaforumController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
+     public function destroyusers(_users $posts)
+    {
+        $posts->delete();
+        return response()->json($posts,200);
+    }
     public function destroypost(_posts $posts)
     {
         $posts->delete();
