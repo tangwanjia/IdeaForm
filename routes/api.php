@@ -18,4 +18,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// a protected group of route
+Route::middleware(['auth:sanctum'])->group(function(){
+    //any route in here is protected
+});
+
 Route::apiResource('/index', 'App\Http\Controllers\IdeaforumController');
