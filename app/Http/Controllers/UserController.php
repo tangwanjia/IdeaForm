@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $commentinfo = Comment::all();
-        return $commentinfo;
+        $userinfo = User::all();
+        return $userinfo;
     }
 
     /**
@@ -29,19 +29,20 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-      $addComment = new Comment();
-      $addComment ->user_id = $request->input('user_id');;
-      $addComment ->post_id = $request->input('post_id');
-      $addComment ->content = $request->input('content');
-      $addComment->save();
+        $newuser = new User();
+        $newuser ->name = $request->input('name');
+        $newuser ->email=$request->input('email');
+        $newuser ->password=$request->input('password');
+        $newuser->save();
 
-      return response()->json($addComment,201);
+        return response()->json($newuser,201);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comment $user)
+    public function show(User $user)
     {
         return response()->json($user,200);
     }
@@ -49,7 +50,7 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Comment $user)
+    public function edit(User $user)
     {
         //
     }
@@ -57,11 +58,11 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $user)
+    public function update(Request $request, User $user)
     {
-        $user->user_id = $request->input('user_id');
-        $user->post_id = $request->input('post_id');
-        $user->content = $request->input('content');
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = $request->input('password');
         $user->save();
 
         return response()->json($user,200);
@@ -70,9 +71,9 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $user)
+    public function destroy(User $user)
     {
-        $user->delete();
+        $user -> delete();
         return response()->json($user,200);
     }
 }

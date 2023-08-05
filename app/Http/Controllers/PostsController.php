@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $commentinfo = Comment::all();
-        return $commentinfo;
+        $postsInfo = Post::all();
+        return $postsInfo;
     }
 
     /**
@@ -29,19 +30,19 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-      $addComment = new Comment();
-      $addComment ->user_id = $request->input('user_id');;
-      $addComment ->post_id = $request->input('post_id');
-      $addComment ->content = $request->input('content');
-      $addComment->save();
+        $newpost = new post();
+        $newpost ->user_id = $request->input('user_id');;
+        $newpost ->title = $request->input('title');
+        $newpost ->content = $request->input('content');
+        $newpost->save();
 
-      return response()->json($addComment,201);
+        return response()->json($newpost,201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comment $user)
+    public function show(Post $user)
     {
         return response()->json($user,200);
     }
@@ -49,7 +50,7 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Comment $user)
+    public function edit(Post $user)
     {
         //
     }
@@ -57,10 +58,10 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $user)
+    public function update(Request $request, Post $user)
     {
         $user->user_id = $request->input('user_id');
-        $user->post_id = $request->input('post_id');
+        $user->title = $request->input('title');
         $user->content = $request->input('content');
         $user->save();
 
@@ -70,7 +71,7 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $user)
+    public function destroy(Post $user)
     {
         $user->delete();
         return response()->json($user,200);
