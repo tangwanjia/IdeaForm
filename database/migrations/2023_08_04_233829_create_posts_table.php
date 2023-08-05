@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('_votes', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->unsigned();
-            $table->integer('post_id')->unsigned();
-            $table->bigInteger('vote_type', false, true )->unique();
+            $table->string('title');
+            $table->string('content', 500);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('_votes');
+        Schema::dropIfExists('posts');
     }
 };

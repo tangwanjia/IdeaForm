@@ -27,21 +27,17 @@ class DatabaseSeeder extends Seeder
 
         User::factory(9)->create();
 
-        // $this->call([
-        //     usersSeeder::class
-        // ]);
+        $this->call([
+            usersSeeder::class
+        ]);
 
-        // $this->call([
-        //     PostSeeder::class
-        // ]);
+        $this->call([
+            PostSeeder::class
+        ]);
 
-        // $this->call([
-        //     commentSeeder::class
-        // ]);
-
-        // $this->call([
-        //     voteSeeder::class
-        // ]);
+        $this->call([
+            commentSeeder::class
+        ]);
 
 
     }
