@@ -7,6 +7,8 @@ use App\Models\_posts;
 use App\Models\_votes;
 use App\Models\_users;
 use App\Models\ideaforum;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IdeaforumController extends Controller
@@ -16,32 +18,19 @@ class IdeaforumController extends Controller
      */
     public function index()
     {
-        $ideas = ideaforum::all();
-        return response()->json($ideas,200); //index mathod
-    }
 
-    public function login()
-    {
-        $login = _users::all();
-        return response()->json($login,200); //index mathod
     }
 
     public function post()
     {
-        $posts = _posts::all();
+        $posts = posts::all();
         return response()->json($posts,200); //index mathod
     }
 
     public function commment()
     {
-        $comments = _comments::all();
+        $comments = comments::all();
         return response()->json($comments,200); //index mathod
-    }
-
-    public function vote()
-    {
-        $votes = _votes::all();
-        return response()->json($votes,200); //index mathod
     }
 
 
@@ -92,17 +81,7 @@ class IdeaforumController extends Controller
             return response()->json($comments,201);
     }
 
-    public function addvote(Request $request)
-    {
-            $votes = new _votes();
-            //publate with data
-            $votes -> user_id = $request->input('user_id');
-            $votes -> post_id = $request->input('post_id');
-            $votes -> vote_type = $request->input('vote_type');
-            $votes -> save();
 
-            return response()->json($votes,201);
-    }
     /**
      * Display the specified resource.
      */

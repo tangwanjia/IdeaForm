@@ -23,4 +23,6 @@ Route::middleware(['auth:sanctum'])->group(function(){
     //any route in here is protected
 });
 
-Route::apiResource('/index', 'App\Http\Controllers\IdeaforumController');
+Route::apiResource('users', 'App\Http\Controllers\UserController');
+Route::apiResource('posts', 'App\Http\Controllers\PostsController');
+Route::apiResource('comments', 'App\Http\Controllers\CommentController');
