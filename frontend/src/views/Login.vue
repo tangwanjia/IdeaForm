@@ -1,10 +1,25 @@
 <script setup>
 import TheWelcome from '../components/TheWelcome.vue'
+import { ref, onMounted, computed } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const getUsers = computed(() => {
+  return store.getters.getUsers;
+});
+
+const users = computed(() => {
+  return store.state.users;
+});
+
+onMounted(() => {
+  store.dispatch("fetchUsers");
+});
 </script>
 
 <template>
   <main>
-
     <body>
       <!-- Navbar -->
       <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
@@ -35,6 +50,10 @@ import TheWelcome from '../components/TheWelcome.vue'
         <p>&copy; Forum page. All rights reserved.</p>
       </footer>
     
+        <div v-for="user in getUsers" :key="user.id">
+            {{ user.id }} {{ user.name }}
+        </div>
+        
     </body>
 
   </main>
