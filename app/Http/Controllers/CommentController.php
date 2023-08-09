@@ -41,9 +41,10 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $user)
+    public function show($id)
     {
-        return response()->json($user,200);
+        $comment = Comment::find($id);
+        return response()->json($comment, 200);
     }
 
     /**
@@ -70,9 +71,10 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return response()->json($user,200);
+        $comment = Comment::find($id);
+        $comment->delete();
+        return response()->json($comment,204);
     }
 }

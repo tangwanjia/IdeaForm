@@ -14,7 +14,8 @@ class PostsController extends Controller
     public function index()
     {
         $postsInfo = Post::all();
-        return $postsInfo;
+
+        return response()->json($postsInfo, 200);
     }
 
     /**
@@ -42,9 +43,10 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $user)
+    public function show($id)
     {
-        return response()->json($user,200);
+        $post = Post::find($id);
+        return response()->json($post,200);
     }
 
     /**
@@ -71,9 +73,10 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return response()->json($user,200);
+        $post = Post::find($id);
+        $post->delete();
+        return response()->json($post,204);
     }
 }
