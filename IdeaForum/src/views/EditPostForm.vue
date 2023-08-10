@@ -1,8 +1,8 @@
 <script setup>
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-
-const router = useRoute();
+const router = useRouter();
 const postId = router.params.postId;
 
 const editedPost = computed(() => {
@@ -39,4 +39,4 @@ const updatePost = async () => {
         <button type="submit" class="btn btn-primary">Save</button>
       </form>
     </div>
-  </template>
+</template>

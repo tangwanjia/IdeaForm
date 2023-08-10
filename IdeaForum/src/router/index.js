@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/edit-post/:postId',
       name: 'edit-post',
       component: EditPostForm
+    },
+    {
+      path: '/edit-comment/:commentId',
+      name: 'edit-comment',
+      component: EditCommentForm
     }
   ]
 })
