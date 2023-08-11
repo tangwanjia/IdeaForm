@@ -65,7 +65,12 @@ export default createStore({
         console.log(error);
         return false;
       }
-    }
+    },
+    logout({ commit }) {
+      // Clear user-related data from the state
+      commit('SET_TOKEN', '');
+      commit('SET_LOGGED_USER_ID', null);
+    },
   },
   mutations: {
     SET_USERS(state, users) {
@@ -86,6 +91,9 @@ export default createStore({
     SET_TOKEN(state, token){
       localStorage.setItem("token", token);
       state.token = token;
+      if (!token) {
+        delete axios.defaults.headers.common["Authorization"];
+      }
     },
   },
 });
