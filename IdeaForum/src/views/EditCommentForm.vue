@@ -10,6 +10,7 @@ const router = useRouter();
 
 const editedComment = ref({
   content: '',
+  contentError: false,
 });
 
 onMounted(async () => {
@@ -28,12 +29,17 @@ const fetchComment = async (commentId) => {
 };
 
 const updateComment = async () => {
+  if (!editedComment.value.content.trim()) {
+    editedComment.value.contentError = true;
+    return;
+  }
+
   try {
     const commentId = Number(route.params.commentId);
     const response = await axios.put(`http://127.0.0.1:8000/api/comments/${commentId}`, editedComment.value);
     if (response.status === 200) {
       store.dispatch('fetchComments'); // Fetch updated comments
-      router.push('/'); // Redirect back to the main page
+      router.push('/home'); // Redirect back to the main page
       alert('Comment updated successfully!');
     } else {
       alert('Error updating comment: Unable to update the comment.');
@@ -64,9 +70,6 @@ const updateComment = async () => {
           <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
              Create New Post
           </button>
-          <button @click="goToLogin" class="btn btn-success ms-auto me-2 p-lg-2">
-            Login
-          </button>
         </div>
   </nav>
 
@@ -85,7 +88,8 @@ const updateComment = async () => {
         <form @submit.prevent="updateComment">
           <div class="mb-3">
             <label for="content" class="form-label">Comment</label>
-            <textarea v-model="editedComment.content" class="form-control" id="content" rows="4" required></textarea>
+            <textarea v-model="editedComment.content" class="form-control" id="content" rows="4"></textarea>
+            <p v-if="editedComment.contentError" class="text-danger">Comment cannot be empty.</p>
           </div>
           <button type="submit" class="btn btn-primary">Update Comment</button>
         </form>
@@ -94,18 +98,11 @@ const updateComment = async () => {
 
   <!-- Footer -->
   <footer class="bg-dark text-lg-start text-white">
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">PHP Forum</i></p>
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Tel:12345678</i></p>
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Address:Ottawa,ON</i></p>
-    
       <!-- Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-        © 2023 Copyright:
-        <a class="text-white" href="#">phpforum.com</a>
+        © 2023 Copyright: phpforum.com
       </div>
-      <!-- Copyright -->
   </footer>
-
   </div>
 
 </template>

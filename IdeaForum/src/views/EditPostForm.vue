@@ -11,7 +11,14 @@ const postId = ref(parseInt(route.params.postId));
 const loggedInUserId = localStorage.getItem('user_id');
 
 const editedPost = computed(() => {
-  return store.state.posts.find(post => post.id === postId.value) || { title: '', content: '' };
+  return (
+    store.state.posts.find((post) => post.id === postId.value) || {
+      title: '',
+      content: '',
+      titleError: false,  // Add these lines
+      contentError: false,  // Add these lines
+    }
+  );
 });
 
 const isPostAuthor = computed(() => {
@@ -20,6 +27,19 @@ const isPostAuthor = computed(() => {
 });
 
 const updatePost = async () => {
+  editedPost.value.titleError = false;
+  editedPost.value.contentError = false;
+
+  if (!editedPost.value.title.trim()) {
+    editedPost.value.titleError = true;
+    return;
+  }
+
+  if (!editedPost.value.content.trim()) {
+    editedPost.value.contentError = true;
+    return;
+  }
+
   if (!isPostAuthor.value) {
     alert('You are not authorized to edit this post.');
     return;
@@ -27,7 +47,7 @@ const updatePost = async () => {
   try {
     const response = await axios.put(`http://127.0.0.1:8000/api/posts/${postId.value}`, editedPost.value);
     if (response.status === 200) {
-      router.push('/');
+      router.push('/home');
       alert('Post updated successfully!');
     } else {
       alert('Error updating post: Unable to update the post.');
@@ -71,22 +91,30 @@ onMounted(async () => {
           <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
              Create New Post
           </button>
-          <button @click="goToLogin" class="btn btn-success ms-auto me-2 p-lg-2">
-            Login
-          </button>
         </div>
   </nav>
 
+  <!-- Main Header -->
+  <div class="p-5 text-center border-bottom">
+      <h1>PHP Forum</h1>
+      <p>
+        A large equal forum to talk about PHP, in order to help one another learn PHP language. <br>
+        Edit your post in the form below.
+      </p>
+  </div>
+
   <div class="container">
-      <h1>Edit Post</h1>
+      <h1 class="text-center">Edit Post</h1>
       <form @submit.prevent="updatePost">
         <div class="mb-3">
           <label for="edit-title" class="form-label">Title</label>
-          <input v-model="editedPost.title" type="text" class="form-control" id="edit-title" required>
+          <input v-model="editedPost.title" type="text" class="form-control" id="edit-title">
+          <p class="text-danger" v-if="editedPost.titleError">Title cannot be empty.</p>
         </div>
         <div class="mb-3">
           <label for="edit-content" class="form-label">Content</label>
-          <textarea v-model="editedPost.content" class="form-control" id="edit-content" rows="4" required></textarea>
+          <textarea v-model="editedPost.content" class="form-control" id="edit-content" rows="4"></textarea>
+          <p class="text-danger" v-if="editedPost.contentError">Content cannot be empty.</p>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
       </form>
@@ -94,16 +122,10 @@ onMounted(async () => {
   
   <!-- Footer -->
   <footer class="bg-dark text-lg-start text-white">
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">PHP Forum</i></p>
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Tel:12345678</i></p>
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Address:Ottawa,ON</i></p>
-    
       <!-- Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-        © 2023 Copyright:
-        <a class="text-white" href="#">phpforum.com</a>
+        © 2023 Copyright: phpforum.com
       </div>
-      <!-- Copyright -->
     </footer>
   </div>
 

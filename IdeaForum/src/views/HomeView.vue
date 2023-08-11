@@ -9,8 +9,11 @@ const router = useRouter();
 const store = useStore();
 const loggedInUserId = computed(() => parseInt(localStorage.getItem('user_id')));
 const isAuthenticated = computed(() => store.state.token !== '');
-console.log(loggedInUserId)
-console.log(isAuthenticated)
+
+// Computed properties to get data from the store
+const users = computed(() => {return store.state.users});
+const posts = computed(() => {return store.state.posts});
+const comments = computed(() => {return store.state.comments});
 
 const goToCreatePost = () => {
   if (isAuthenticated.value) {
@@ -41,12 +44,18 @@ const deletePost = async (postId) => {
 };
 
 const newComments = {};
+const commentInteracted = ref({});
 const createNewComment = (postId) => {
   newComments[postId] = '';
 };
 
 const submitComment = async (postId) => {
   try {
+    if (!newComments[postId] || newComments[postId].trim() === '') {
+      alert('Comment cannot be empty.');
+      return;
+    }
+
     const response = await axios.post('http://127.0.0.1:8000/api/comments', {
       post_id: postId,
       content: newComments[postId],
@@ -55,6 +64,7 @@ const submitComment = async (postId) => {
     if (response.status === 201) {
       store.dispatch("fetchComments"); // Fetch updated comments
       newComments[postId] = ''; // Clear the comment field
+      commentInteracted[postId] = false;
       alert('Comment posted successfully!');
     } else {
       alert('Error posting comment: Unable to post the comment.');
@@ -90,13 +100,10 @@ onMounted(() => {
   // Create new comments for each post
   posts.value.forEach(post => {
     createNewComment(post.id);
+    commentInteracted[post.id] = false;
   });
 });
 
-// Computed properties to get data from the store
-const users = computed(() => {return store.state.users});
-const posts = computed(() => {return store.state.posts});
-const comments = computed(() => {return store.state.comments});
 
 // Helper function to get comments by post id
 const getCommentsByPostId = (postId) => {
@@ -106,10 +113,6 @@ const getCommentsByPostId = (postId) => {
 // Helper function to get user by id
 const getUserById = (userId) => {
   return users.value.find((user) => user.id === userId);
-};
-
-const goToLogin = () => {
-  router.push({ name: 'login' });
 };
 
 const isPostAuthor = (post) => {
@@ -128,18 +131,8 @@ const isPostAuthor = (post) => {
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-            </ul>
-          </div>
           <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
              Create New Post
-          </button>
-          <button @click="goToLogin" class="btn btn-success ms-auto me-2 p-lg-2">
-            Login
           </button>
         </div>
     </nav>
@@ -149,20 +142,19 @@ const isPostAuthor = (post) => {
       <h1>PHP Forum</h1>
       <p>
         A large equal forum to talk about PHP, in order to help one another learn PHP language. <br>
-        Login to catch more important and useful information.
+        Read and make your contributions to the discussions below.
       </p>
     </div>
 
     <!-- Main Content -->
     <div class="container main-content">
-      <button @click="goToCreatePost" class="btn btn-primary mt-3">Create New Post</button>
       <div class="row justify-content-center">
         <div class="col-lg-12">
           <div v-for="post in posts" :key="post.id" class="post-box border mb-4 p-3">
             <h2 class="post-title">{{ post.title }}</h2>
             <p>{{ post.content }}</p>
-            <button v-if="loggedInUserID && isPostAuthor(post)" @click="editPost(post.id)" class="btn btn-primary">Edit</button>
-            <button v-if="loggedInUserID && isPostAuthor(post)" @click="deletePost(post.id)" class="btn btn-danger">Delete</button>
+            <button v-if="loggedInUserId && isPostAuthor(post)" @click="editPost(post.id)" class="btn btn-primary">Edit</button>
+            <button v-if="loggedInUserId && isPostAuthor(post)" @click="deletePost(post.id)" class="btn btn-danger">Delete</button>
             <h5 class="comment-title">Comments:</h5>
             <ul>
               <li v-for="comment in getCommentsByPostId(post.id)" :key="comment.id">
@@ -174,7 +166,13 @@ const isPostAuthor = (post) => {
             <form @submit.prevent="submitComment(post.id)">
               <div class="mb-3">
                 <label for="comment" class="form-label">Post a Comment</label>
-                <textarea v-model="newComments[post.id]" class="form-control" id="comment" rows="2" required></textarea>
+                <textarea 
+                v-model="newComments[post.id]" 
+                class="form-control" 
+                id="comment" 
+                @input="commentInteracted[post.id] = true" 
+                rows="2"></textarea>
+                <p class="text-danger" v-if="commentInteracted[post.id] && (!newComments[post.id] || !newComments[post.id].trim())">Comment cannot be empty.</p>
               </div>
               <button type="submit" class="btn btn-primary">Post Comment</button>
             </form>
@@ -186,19 +184,12 @@ const isPostAuthor = (post) => {
 
     <!-- Footer -->
     <footer class="bg-dark  text-lg-start text-white">
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">PHP Forum</i></p>
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Tel:12345678</i></p>
-      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Address:Ottawa,ON</i></p>
-    
       <!-- Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-        © 2023 Copyright:
-        <a class="text-white" href="#">phpforum.com</a>
+        © 2023 Copyright:phpforum.com
       </div>
-      <!-- Copyright -->
     </footer>
   </div>
-
 
 </template>
 
@@ -235,9 +226,5 @@ const isPostAuthor = (post) => {
     .main-content {
       flex: 1;
       padding: 20px;
-    }
-
-    #app {
-      min-height: 100vh;
     }
 </style>

@@ -58,8 +58,7 @@ export default createStore({
 
         // Set token in Axios headers
         axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-        console.log(response.data.token);
-        console.log(response.data.user_id);
+        alert('User logged in successfully!')
         return true;
       } catch(error){
         alert('Error logging in: ' + error);

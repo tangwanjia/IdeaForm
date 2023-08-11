@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,3 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::apiResource('posts', PostsController::class);
     Route::apiResource('comments', CommentController::class);
 });
-
-/* Route::apiResource('users', UserController::class);
-Route::apiResource('posts', PostsController::class);
-Route::apiResource('comments', CommentController::class); */
