@@ -60,14 +60,16 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $user)
+    public function update(Request $request, string $id)
     {
-        $user->user_id = $request->input('user_id');
-        $user->title = $request->input('title');
-        $user->content = $request->input('content');
-        $user->save();
+        $post = Post::find($id);
 
-        return response()->json($user,200);
+        //$post->user_id = $request->input('user_id');
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
+        $post->save();
+
+        return response()->json($post,200);
     }
 
     /**

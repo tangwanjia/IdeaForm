@@ -1,14 +1,23 @@
 <script setup>
 
-import { useStore} from "vuex";
-import { onMounted, computed } from "vue";
+import { useStore }  from "vuex";
+import { onMounted, computed, ref } from "vue";
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
+const store = useStore();
+const loggedInUserId = computed(() => parseInt(localStorage.getItem('user_id')));
+const isAuthenticated = computed(() => store.state.token !== '');
+console.log(loggedInUserId)
+console.log(isAuthenticated)
 
 const goToCreatePost = () => {
-  router.push({ name: 'create-post' });
+  if (isAuthenticated.value) {
+    router.push({ name: 'create-post' });
+  } else {
+    router.push({ name: 'login' });
+  }
 };
 
 const editPost = (postId) => {
@@ -31,18 +40,21 @@ const deletePost = async (postId) => {
     }
 };
 
-const newComment = ref('');
+const newComments = {};
+const createNewComment = (postId) => {
+  newComments[postId] = '';
+};
 
 const submitComment = async (postId) => {
   try {
     const response = await axios.post('http://127.0.0.1:8000/api/comments', {
       post_id: postId,
-      content: newComment.value,
-      user_id: 1, // Set the user_id as needed
+      content: newComments[postId],
+      user_id: loggedInUserId.value,
     });
     if (response.status === 201) {
       store.dispatch("fetchComments"); // Fetch updated comments
-      newComment.value = ''; // Clear the comment field
+      newComments[postId] = ''; // Clear the comment field
       alert('Comment posted successfully!');
     } else {
       alert('Error posting comment: Unable to post the comment.');
@@ -70,12 +82,15 @@ const deleteComment = async (commentId) => {
   }
 };
 
-const store = useStore();
 // Fetch the data when the component is mounted
 onMounted(() => {
   store.dispatch("fetchUsers");
   store.dispatch("fetchPosts");
   store.dispatch("fetchComments");
+  // Create new comments for each post
+  posts.value.forEach(post => {
+    createNewComment(post.id);
+  });
 });
 
 // Computed properties to get data from the store
@@ -93,44 +108,105 @@ const getUserById = (userId) => {
   return users.value.find((user) => user.id === userId);
 };
 
+const goToLogin = () => {
+  router.push({ name: 'login' });
+};
+
+const isPostAuthor = (post) => {
+  return post.user_id === loggedInUserId.value;
+};
+
 </script>
 
 <template>
-
-<div class="container">
-  <button @click="goToCreatePost" class="btn btn-primary mt-3">Create New Post</button>
-  <div class="row justify-content-center">
-    <div class="col-lg-12">
-      <div v-for="post in posts" :key="post.id" class="post-box border mb-4 p-3">
-        <h2 class="post-title">{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
-        <button @click="editPost(post.id)" class="btn btn-primary">Edit</button>
-        <button @click="deletePost(post.id)" class="btn btn-danger">Delete</button>
-        <h5 class="comment-title">Comments:</h5>
-        <ul>
-          <li v-for="comment in getCommentsByPostId(post.id)" :key="comment.id">
-            {{ comment.content }} - {{ getUserById(comment.user_id).name }}
-            <button @click="editComment(comment.id)" class="btn btn-primary btn-sm">Edit</button>
-            <button @click="deleteComment(comment.id)" class="btn btn-danger btn-sm">Delete</button>
-          </li>
-        </ul>
-        <form @submit.prevent="submitComment(post.id)">
-          <div class="mb-3">
-            <label for="comment" class="form-label">Post a Comment</label>
-            <textarea v-model="newComment" class="form-control" id="comment" rows="2" required></textarea>
+  <div class="page-container">
+    <!-- Nav Bar -->
+    <nav class="navbar bg-dark navbar-expand-lg navbar-dark p-3">
+        <div class="container">
+          <a class="navbar-brand" href="#">PHP</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+            </ul>
           </div>
-          <button type="submit" class="btn btn-primary">Post Comment</button>
-        </form>
-        <hr class="mt-4 mb-0">
+          <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
+             Create New Post
+          </button>
+          <button @click="goToLogin" class="btn btn-success ms-auto me-2 p-lg-2">
+            Login
+          </button>
+        </div>
+    </nav>
+
+    <!-- Main Header -->
+    <div class="p-5 text-center border-bottom">
+      <h1>PHP Forum</h1>
+      <p>
+        A large equal forum to talk about PHP, in order to help one another learn PHP language. <br>
+        Login to catch more important and useful information.
+      </p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+      <button @click="goToCreatePost" class="btn btn-primary mt-3">Create New Post</button>
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div v-for="post in posts" :key="post.id" class="post-box border mb-4 p-3">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+            <button v-if="loggedInUserID && isPostAuthor(post)" @click="editPost(post.id)" class="btn btn-primary">Edit</button>
+            <button v-if="loggedInUserID && isPostAuthor(post)" @click="deletePost(post.id)" class="btn btn-danger">Delete</button>
+            <h5 class="comment-title">Comments:</h5>
+            <ul>
+              <li v-for="comment in getCommentsByPostId(post.id)" :key="comment.id">
+                {{ comment.content }} - {{ getUserById(comment.user_id).name }}
+                <button v-if="comment.user_id === loggedInUserId" @click="editComment(comment.id)" class="btn btn-primary btn-sm">Edit</button>
+                <button v-if="comment.user_id === loggedInUserId" @click="deleteComment(comment.id)" class="btn btn-danger btn-sm">Delete</button>
+              </li>
+            </ul>
+            <form @submit.prevent="submitComment(post.id)">
+              <div class="mb-3">
+                <label for="comment" class="form-label">Post a Comment</label>
+                <textarea v-model="newComments[post.id]" class="form-control" id="comment" rows="2" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+            <hr class="mt-4 mb-0">
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark  text-lg-start text-white">
+      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">PHP Forum</i></p>
+      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Tel:12345678</i></p>
+      <p class="text-uppercase text-end"><i class="fas fa-at fa-fw fa-sm me-2">Address:Ottawa,ON</i></p>
+    
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        © 2023 Copyright:
+        <a class="text-white" href="#">phpforum.com</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
   </div>
-</div>
+
 
 </template>
 
 
 <style>
+    *{
+      font-family: Arial, Helvetica, sans-serif;
+    }
     body {
       background-color: #f5f5f5;
     }
@@ -148,5 +224,20 @@ const getUserById = (userId) => {
     .comment-title {
       color: #555;
       margin-top: 10px;
+    }
+
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    #app {
+      min-height: 100vh;
     }
 </style>

@@ -23,11 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // a protected group of route
 Route::middleware(['auth:sanctum'])->group(function(){
-    /* Route::apiResource('users', UserController::class);
+    Route::apiResource('users', UserController::class);
     Route::apiResource('posts', PostsController::class);
-    Route::apiResource('comments', CommentController::class); */
+    Route::apiResource('comments', CommentController::class);
 });
 
-Route::apiResource('users', UserController::class);
+/* Route::apiResource('users', UserController::class);
 Route::apiResource('posts', PostsController::class);
-Route::apiResource('comments', CommentController::class);
+Route::apiResource('comments', CommentController::class); */
