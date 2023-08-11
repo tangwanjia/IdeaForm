@@ -43,6 +43,11 @@
     }
   };
 
+  const logout = () => {
+    store.dispatch('logout');
+    router.push({ name: 'login' }); 
+  };
+
 </script>
 
 <template>
@@ -62,9 +67,7 @@
               </li>
             </ul>
           </div>
-          <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
-             Create New Post
-          </button>
+          <button @click="logout" class="btn btn-danger ms-auto me-2 p-lg-2">Logout</button>
         </div>
   </nav>
 

@@ -119,6 +119,11 @@ const isPostAuthor = (post) => {
   return post.user_id === loggedInUserId.value;
 };
 
+const logout = () => {
+  store.dispatch('logout'); 
+  router.push({ name: 'login' });
+};
+
 </script>
 
 <template>
@@ -134,6 +139,7 @@ const isPostAuthor = (post) => {
           <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
              Create New Post
           </button>
+          <button @click="logout" class="btn btn-danger ms-auto me-2 p-lg-2">Logout</button>
         </div>
     </nav>
 
