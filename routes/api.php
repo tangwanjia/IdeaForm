@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostsController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,9 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // a protected group of route
 Route::middleware(['auth:sanctum'])->group(function(){
-    //any route in here is protected
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('posts', PostsController::class);
+    Route::apiResource('comments', CommentController::class);
 });
-
-Route::apiResource('users', 'App\Http\Controllers\UserController');
-Route::apiResource('posts', 'App\Http\Controllers\PostsController');
-Route::apiResource('comments', 'App\Http\Controllers\CommentController');

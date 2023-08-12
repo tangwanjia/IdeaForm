@@ -41,9 +41,10 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $user)
+    public function show($id)
     {
-        return response()->json($user,200);
+        $comment = Comment::find($id);
+        return response()->json($comment, 200);
     }
 
     /**
@@ -57,22 +58,24 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $user)
+    public function update(Request $request, string $id)
     {
-        $user->user_id = $request->input('user_id');
-        $user->post_id = $request->input('post_id');
-        $user->content = $request->input('content');
-        $user->save();
+        $comment = Comment::find($id);
 
-        return response()->json($user,200);
+        //$post->user_id = $request->input('user_id');
+        $comment->content = $request->input('content');
+        $comment->save();
+
+        return response()->json($comment,200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return response()->json($user,200);
+        $comment = Comment::find($id);
+        $comment->delete();
+        return response()->json($comment,204);
     }
 }

@@ -1,28 +1,55 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import CreatePostForm from '../views/CreatePostForm.vue'
+import EditPostForm from '../views/EditPostForm.vue'
+import EditCommentForm from '../views/EditCommentForm.vue'
+import Login from '../views/Login.vue'
+import store from '../store/index'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: HomeView
     },
     {
-      path: '/Login',
+      path: '/',
       name: 'login',
-      component: () => import('../views/Login.vue')
+      component: Login
+    },
+    { 
+      path: '/create-post', 
+      name: 'create-post', 
+      component: CreatePostForm,
+      meta: {requiresAuth: true} 
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/edit-post/:postId',
+      name: 'edit-post',
+      component: EditPostForm
+    },
+    {
+      path: '/edit-comment/:commentId',
+      name: 'edit-comment',
+      component: EditCommentForm
+    },
   ]
 })
+
+//Global navigation
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = store.state.token !== '';
+
+  if (requiresAuth && !isAuthenticated) {
+    // Redirect to the login page if route requires authentication but user is not logged in
+    next({ name: 'login' });
+  } else {
+    next();
+  }
+});
+
 
 export default router

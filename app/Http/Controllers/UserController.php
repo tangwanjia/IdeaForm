@@ -13,7 +13,8 @@ class UserController extends Controller
     public function index()
     {
         $userinfo = User::all();
-        return $userinfo;
+        
+        return response()->json($userinfo, 200);
     }
 
     /**
