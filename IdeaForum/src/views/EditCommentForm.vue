@@ -59,26 +59,29 @@ const logout = () => {
 <template>
     <div class="page-container">
   <!-- Nav Bar -->
-  <nav class="navbar bg-dark navbar-expand-lg navbar-dark p-3">
-        <div class="container">
-          <a class="navbar-brand" href="#">PHP</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-            </ul>
-          </div>
-          <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
-             Create New Post
-          </button>
-          <button @click="logout" class="btn btn-danger ms-auto me-2 p-lg-2">Logout</button>
-        </div>
-  </nav>
+      <nav class="navbar bg-dark navbar-expand-lg navbar-dark p-3">
+            <div class="container">
+              <a class="navbar-brand" href="#">
+                <img src="images\ele.png" alt="Logo" class="img-fluid">
+              </a>
+              <a class="navbar-brand">PHP Forum</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  </li>
+                </ul>
+              </div>
+              <button @click="goToCreatePost" class="btn btn-success ms-auto me-2 p-lg-2">
+                 Create New Post
+              </button>
+              <button @click="logout" class="btn btn-danger ms-auto me-2 p-lg-2">Logout</button>
+            </div>
+      </nav>
 
   <!-- Main Header -->
   <div class="p-5 text-center border-bottom">

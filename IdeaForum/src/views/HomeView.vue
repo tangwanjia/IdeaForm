@@ -131,7 +131,9 @@ const logout = () => {
     <!-- Nav Bar -->
     <nav class="navbar bg-dark navbar-expand-lg navbar-dark p-3">
         <div class="container">
-          <a class="navbar-brand" href="#">PHP</a>
+          <a class="navbar-brand" href="#">
+                <img src="images\ele.png" alt="Logo" class="img-fluid">
+              </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
